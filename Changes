@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+Revision history for Perl extension Net::TCPwrappers
+
+1.00  04-Nov-2002, George A. Theall
+      - Initial version.
+
+1.10  26-Dec-2004, James FitzGibbon
+      - Cleanup by James FitzGibbon for distribution to CPAN
+      - Require perl v5.6.1
+      - use AUTOLOAD generated from ExtUtils::Constant
+      - Switch build infrastructure from ExtUtils::MakeMaker to
+        Module::Build
+      - Allow the libwrap prefix to be specified on the command line
+        to Build.PL
+      - Disable Build.PL prompting with --noprompt switch
+      - generate ppport.h at install time using Devel::PPPort, or
+        fallback to one created with v3.03 of that module
+      - Get test coverage up to 100% for statement and branch using
+        Devel::Cover
+      - Add tests for exported symbols, soft breakpoids, pod coverage
+        and pod syntax
+      - Switch to XSLoader from DynaLoader
+
+#
+# EOF

@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+TODO for Net::TCPwrappers
+=========================
+
+- incorporate any missing functionality from Authen::Libwrap and deprecate
+  it
+
+- support taking socket info from IO::Socket derived objects instead of
+  having to pass the file descriptor number directly
+
+#
+# EOF

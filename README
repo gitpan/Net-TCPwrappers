@@ -1,0 +1,149 @@
+#
+# $Id: README 151 2004-12-26 22:35:29Z james $
+#
+
+README for Net::TCPwrappers
+===========================
+
+DESCRIPTION
+-----------
+
+Net::TCPwrappers offers perl programmers a convenient interface to the
+libwrap.a library from tcp_wrappers, Wietse Venema's popular TCP/IP
+daemon wrapper package, which serves to monitor and filter access to
+TCP-based network services on unix hosts. 
+
+At first blush, this might seem like overkill.  "Why not just write the
+necessary code myself and include that in my programs?" you're probably
+thinking.  Sure, any competent programmer can easily do that.  Moreover,
+perl, with its regular expressions, affords extremely flexible matching
+of host names / addresses. 
+
+Yet by rolling your own you would likely miss out on the following:
+
+   o A common facility for controlling host access.  As 
+     distributed, tcp_wrappers works not only with daemons 
+     started via inetd but also with a wide variety of C 
+     programs that support it (eg, sendmail, OpenSSH, 
+     Nessus, etc). With Net::TCPwrappers, this support is 
+     now available to perl programs.
+
+   o Access controls are stored apart from programs and 
+     are re-read each time a check is done. This makes it 
+     trivial to adjust access controls, whether by hand as 
+     your needs evolve or automatically, as in the case of 
+     an intrusion detection system.
+
+
+DEPENDENCIES
+------------
+
+This module requires Perl version 5.005 or later as well as an ANSI C
+compiler. 
+
+Of course, it also requires a working installation of Wietse Venema's TCP/IP
+daemon wrapper package, tcp_wrappers, including the libwrap.a library.  The
+latest version currently is 7.6, released in March 1997; earlier versions
+may also work as it appears the library interface has been rather stable. 
+
+If you need a copy, visit <ftp://ftp.porcupine.org/pub/security/> for the
+source code or check with your favourite software respository for
+pre-compiled binaries (eg, RPMs for Linux, Packages for Sun, etc).
+
+
+INSTALLATION
+------------
+
+To build and test the module, type the following:
+
+   perl Build.PL
+   ./Build
+   ./Build test
+
+Check the TROUBLESHOOTING section below if you encounter any problems or
+any of the tests fail. 
+
+To install it, type:
+
+   make install
+
+Note: you probably need to do this as root to have it installed
+system-wide. 
+
+At this point, you may wish to look at the sample programs in the
+examples directory to give you some ideas about how to use this
+module.
+
+
+TROUBLESHOOTING
+---------------
+
+Build.PL will look for libwrap.{so,a} and tcpd.h in the following
+prefixes:
+
+/usr
+/usr local
+/opt
+/opt/local
+/opt/libwrap
+/opt/tcpwrappers
+
+If your copy of TCP wrappers is not in one of these directories, pass the
+prefix (not including the 'include' and 'lib' directories) to Build.PL:
+
+perl Build.PL /opt/tcpd-7.6
+
+Build.PL normally prompts for confirmation when it has found a suitable
+library and include file.  To suppress this behaviour and use the first
+match found, pass '--noprompt' to Build.PL on the command line:
+
+perl Build.PL --noprompt
+
+If one or more of the tests fail, run them in verbose mode (eg, "make
+test TEST_VERBOSE=1").  This may give you an idea of which specific
+tests fail and why. 
+
+Another option involves modifying the file TCPwrappers.xs -- changing
+the line "#if 0" near the top to "#if 1" and recompiling.  This will
+turn on tracing of the XSUBs, which provide the glue between libwrap.a
+and Perl.  [To disable tracing, re-edit the file and recompile /
+reinstall.]
+
+
+FEEDBACK AND SUPPORT
+--------------------
+
+If you like this module, please rate it on it's CPAN page:
+
+http://cpanratings.perl.org/rate/?distribution=Net-TCPwrappers
+
+If you encounter difficulties, first read the TROUBLESHOOTING section above
+and then check for a newer version of Net::TCPwrappers on CPAN.  If problems
+still persist, submit a bug report via the bug tracker at
+http://rt.cpan.org/.
+
+    - Your platform and OS version (eg, "uname -a"). If using Linux,
+      also include your glibc version (eg, "ls -al /lib/libc*").
+
+    - The ANSI C/C++ compiler name and version (eg, "gcc -v").
+
+    - Perl's configuration, obtained by running "perl -V".
+
+    - The version of tcp_wrappers installed on your system and
+      how it got there (ie, from an RPM, compiled yourself, etc).
+
+    - Results from running "make test TEST_VERBOSE=1" after building
+      this module.
+
+
+COPYRIGHT AND LICENCE
+---------------------
+
+Copyright (c) 2002, George A.  Theall.  All rights reserved. 
+Copyright (c) 2004, James FitzGibbon.  All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+#
+# EOF
