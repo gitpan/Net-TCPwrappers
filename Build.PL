@@ -160,6 +160,8 @@ Module::Build->new(
 
     create_makefile_pl   => 'passthrough',
 
+    create_readme        => 1,
+
     extra_compiler_flags => "-I$inc_dir",
 
     extra_linker_flags   => [ "-L$lib_dir", "-lwrap" ]

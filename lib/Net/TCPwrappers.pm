@@ -1,5 +1,5 @@
 #
-# $Id: TCPwrappers.pm 151 2004-12-26 22:35:29Z james $
+# $Id: TCPwrappers.pm 161 2004-12-31 04:00:52Z james $
 #
 
 =head1 NAME
@@ -38,7 +38,7 @@ use Carp;
 use ExtUtils::Constant;
 use XSLoader;
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 
 our @EXPORT      = ();
 our %EXPORT_TAGS = (
@@ -153,7 +153,7 @@ is called with C<RQ_FILE>.
 
 Determines whether to allow access based on information in the request
 structure pointed to by C<$request> along with the host access tables (see
-L<hosts_access(5)>).
+L<hosts_access>).
 
 Returns 0 if access should be denied. 
 
@@ -227,9 +227,169 @@ client host.
 
 None of these are exported by default.
 
-=head1 KNOWN BUGS AND CAVEATS
+=head1 RATIONALE
 
-Currently, I am not aware of any bugs in this module.
+At first blush, this module might seem like overkill.  "Why not just write
+the necessary code myself and include that in my programs?" you're probably
+thinking.  Sure, any competent programmer can easily do that.  Moreover,
+perl, with its regular expressions, affords extremely flexible matching of
+host names / addresses.
+
+Yet by rolling your own you would likely miss out on the following:
+
+=over 4
+
+=item *
+
+A common facility for controlling host access.  As distributed, tcp_wrappers
+works not only with daemons started via inetd but also with a wide variety
+of C programs that support it (eg, sendmail, OpenSSH, Nessus, etc). With
+Net::TCPwrappers, this support is now available to perl programs.
+
+=item *
+
+Access controls are stored apart from programs and are re-read each time a
+check is done. This makes it trivial to adjust access controls, whether by
+hand as your needs evolve or automatically, as in the case of an intrusion
+detection system.
+
+=back
+
+=head1 INSTALLATION
+
+Installation of Net::TCPWrappers requires a working installation of Wietse
+Venema's TCP/IP daemon wrapper package, tcp_wrappers, including the
+libwrap.a library.  The latest version currently is 7.6, released in March
+1997; earlier versions may also work as it appears the library interface has
+been rather stable.
+
+If you need a copy, visit <ftp://ftp.porcupine.org/pub/security/> for the
+source code or check with your favourite software respository for
+pre-compiled binaries (eg, RPMs for Linux, Packages for Sun, etc).
+
+=head2 BUILDING
+
+To build and test the module, type the following:
+
+  perl Build.PL
+  ./Build
+  ./Build test
+
+Check the L<troubleshooting section|"TROUBLESHOOTING"> if you encounter any
+problems or any of the tests fail.
+
+To install it, type:
+
+  ./Build install
+
+Note: you probably need to do this as root to have it installed
+system-wide. 
+
+At this point, you may wish to look at the sample programs in the
+examples directory to give you some ideas about how to use this
+module.
+
+=head2 TROUBLESHOOTING
+
+Build.PL will look for libwrap.{so,a} and tcpd.h in the following
+prefixes:
+
+  /usr
+  /usr/local
+  /opt
+  /opt/local
+  /opt/libwrap
+  /opt/tcpwrappers
+
+If your copy of TCP wrappers is not in one of these directories, pass the
+prefix (not including the 'include' and 'lib' directories) to Build.PL:
+
+  perl Build.PL /opt/tcpd-7.6
+
+Build.PL normally prompts for confirmation when it has found a suitable
+library and include file.  To suppress this behaviour and use the first
+match found, pass C<--noprompt> to Build.PL on the command line:
+
+  perl Build.PL --noprompt
+
+If one or more of the tests fail, run them in verbose mode (eg, C<./Build
+test verbose=1>). This may give you an idea of which specific tests fail and
+why.
+
+Another option involves modifying the file TCPwrappers.xs.  Edit the file and change the line
+near the top that reads:
+
+  #if 0
+
+to:
+
+  #if 1
+
+and recompile.  This will turn on tracing of the XSUBs, which provide the
+glue between libwrap.a and Perl.  Because this is a compiled-in change, it
+should be used only in extreme situations to send debug information to the
+author.  To disable tracing, re-edit the file and recompile / reinstall.
+
+=head1 TODO
+
+The current maintainer of this module wrote another Perl wrapper for libwrap
+called Authen::Libwrap.  It didn't cover the API as comprehensively, and
+very little feedback was ever received on it.  The original author of
+Net::TCPWrappers offered his source code for possible integration, but it
+turned out to be easier to integrate what little unique functional was in
+Authen::Libwrap into Net::TCPWrappers.
+
+The tests for Authen::Libwrap are part of the test suite for
+Net::TCPWrappers, but many of them are expected to fail at present.  The
+goal is to get those tests to pass, at which point Authen::Libwrap can be
+deprecated in favour of this module.
+
+Other specific tasks:
+
+=over 4
+
+=item * develop an OO interface
+
+=back
+
+=head1 BUGS
+
+None currently reported.  If you find one, first read the L<troubleshooting
+section|"TROUBLESHOOTING"> and then check for a newer version of
+Net::TCPwrappers on CPAN.  If problems still persist, submit a bug report
+via the bug tracker at http://rt.cpan.org/.
+
+If you like this module, please rate it on it's CPAN page:
+
+http://cpanratings.perl.org/rate/?distribution=Net-TCPwrappers
+
+In your bug report, please include as much information as possible, including:
+
+=over 4
+
+=item *
+
+Your platform and OS version (eg, "uname -a"). If using Linux, also include
+your glibc version (eg, "ls -al /lib/libc*").
+
+=item *
+
+The ANSI C/C++ compiler name and version (eg, "gcc -v").
+
+=item *
+
+Perl's configuration, obtained by running "perl -V".
+
+=item *
+
+The version of tcp_wrappers installed on your system and how it got there
+(ie, from an RPM, compiled yourself, etc).
+
+=item *
+
+Results from running C<./Build test verbose=1> after building this module.
+
+=back
 
 =head1 DIAGNOSTICS
 
@@ -237,7 +397,7 @@ The routines in libwrap.a report problems via the syslog daemon.
 
 =head1 SEE ALSO
 
-L<hosts_access(5)>, libwrap.a documentation.
+L<hosts_access>, libwrap.a documentation.
 
 =head1 AUTHOR
 
@@ -248,6 +408,7 @@ Currently maintained by James FitzGibbon, E<lt>jfitz@CPAN.orgE<gt>.
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2002, George A. Theall. All Rights Reserved.
+
 Copyright (c) 2004, James FitzGibbon.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or modify it under

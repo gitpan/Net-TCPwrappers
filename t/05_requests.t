@@ -1,5 +1,5 @@
 #
-# $Id: 05_requests.t 151 2004-12-26 22:35:29Z james $
+# $Id: 05_requests.t 161 2004-12-31 04:00:52Z james $
 #
 
 # Tests creating and updating request structures with both valid and bogus 
@@ -9,9 +9,16 @@
 
 use strict;
 use warnings;
-use Net::TCPwrappers qw(/^RQ_/ request_init request_set);
-use Test::More tests => 38;
 
+BEGIN {
+    use Test::More;
+    our $tests = 38;
+    eval "use Test::NoWarnings";
+    $tests++ unless( $@ );
+    plan tests => $tests;
+}
+
+use Net::TCPwrappers qw| /^RQ_/ request_init request_set|;
 
 ###########################################################################
 # Make sure Socket extension is available -- it almost certainly is.

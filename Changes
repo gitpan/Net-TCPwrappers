@@ -24,5 +24,14 @@ Revision history for Perl extension Net::TCPwrappers
         and pod syntax
       - Switch to XSLoader from DynaLoader
 
+1.11  31-Dec-2004, James FitzGibbon
+      - Integrate installation and troubleshooting instructions from the
+        README file into the POD for the module, and let Module::Build
+        create the README as a text version of the POD.
+      - pull over the testsuite from Authen::Libwrap so that we have an
+        idea of what needs to be fixed before Authen::Libwrap can be
+        deprecated.  About two-thirds of the tests fail and are marked
+        as TODO for now, but at least there is a record now.
+
 #
 # EOF

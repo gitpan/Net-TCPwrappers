@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Net-TCPwrappers
-version: 1.10
+version: 1.11
 author:
   - George A. Theall, E<lt>theall@tifaware.comE<gt>
   - |-
@@ -13,5 +13,5 @@ build_requires:
 provides:
   Net::TCPwrappers:
     file: lib/Net/TCPwrappers.pm
-    version: 1.10
+    version: 1.11
 generated_by: Module::Build version 0.2607

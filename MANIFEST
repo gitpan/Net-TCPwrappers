@@ -18,5 +18,5 @@ t/03_pod_coverage.t
 t/04_breakpoints.t
 t/05_requests.t
 t/06_autoload.t
-TODO
+t/07_authen_librap.t
 typemap

@@ -1,5 +1,5 @@
 #
-# $Id: 01_use.t 151 2004-12-26 22:35:29Z james $
+# $Id: 01_use.t 161 2004-12-31 04:00:52Z james $
 #
 
 use strict;
@@ -15,7 +15,7 @@ my %expected;
 BEGIN {
 
     %expected = (
-        'Net::TCPwrappers' => '1.10',
+        'Net::TCPwrappers' => '1.11',
     );
 
     use Test::More;
